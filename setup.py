@@ -9,7 +9,7 @@ setuptools.setup(
     packages=setuptools.find_packages(),
     install_requires=[
         "requests>=2.18.4",
-        "prometheus_client>=0.2.0",
+        "prometheus_client>=0.2.0,<=0.2.0",
     ],
     entry_points={
         "console_scripts": [

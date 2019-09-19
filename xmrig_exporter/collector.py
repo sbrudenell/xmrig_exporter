@@ -28,22 +28,24 @@ class XmrigCollector(object):
         j = requests.get(self.url, headers=headers).json()
         ids = {"worker_id": j["worker_id"]}
         for i, v in enumerate(j["hashrate"]["total"]):
-            metrics.append(self.make_metric(
-                False,
-                self._prefix + "hashrate%d" % i,
-                "Overall Hashrate",
-                v,
-                **ids))
-        for tidx, t in enumerate(j["hashrate"]["threads"]):
-            for i, v in enumerate(t):
-                labels = {"thread": tidx}
-                labels.update(ids)
+            if not v is None:
                 metrics.append(self.make_metric(
                     False,
-                    self._prefix + "thread_hashrate%d" % i,
-                    "Thread Hashrate",
+                    self._prefix + "hashrate%d" % i,
+                    "Overall Hashrate",
                     v,
-                    **labels))
+                    **ids))
+        for tidx, t in enumerate(j["hashrate"]["threads"]):
+            for i, v in enumerate(t):
+                if not v is None:
+                    labels = {"thread": tidx}
+                    labels.update(ids)
+                    metrics.append(self.make_metric(
+                        False,
+                        self._prefix + "thread_hashrate%d" % i,
+                        "Thread Hashrate",
+                        v,
+                        **labels))
         metrics.append(self.make_metric(
             False,
             self._prefix + "diff_current",
